@@ -26,7 +26,7 @@ sudo ip link add name sit1 type sit local $IP remote $REMOTE_IP mode any
 sudo ip link set sit1 up
 
 if [[ "$TYPE" == "1" ]]; then
-    sudo ip addr add 10.1.1.2/8 dev sit1
+    sudo ip addr add 10.1.1.2/16 dev sit1
 
     if [[ "$PORT" != "0" ]]; then
         sysctl net.ipv4.ip_forward=1
@@ -38,5 +38,5 @@ if [[ "$TYPE" == "1" ]]; then
     sudo iptables -A INPUT --proto icmp -j DROP
 
 else
-    sudo ip addr add 10.1.1.1/8 dev sit1
+    sudo ip addr add 10.1.1.1/16 dev sit1
 fi
