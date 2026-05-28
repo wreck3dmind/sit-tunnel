@@ -26,17 +26,17 @@ sudo ip link add name sit1 type sit local $IP remote $REMOTE_IP mode any
 sudo ip link set sit1 up
 
 if [[ "$TYPE" == "1" ]]; then
-    sudo ip addr add 10.1.1.2/16 dev sit1
+    sudo ip addr add 10.0.0.2/16 dev sit1
 
     if [[ "$PORT" != "0" ]]; then
         sysctl net.ipv4.ip_forward=1
 
-        sudo iptables -t nat -A PREROUTING -p tcp --dport $PORT -j DNAT --to-destination 10.1.1.1:$PORT
+        sudo iptables -t nat -A PREROUTING -p tcp --dport $PORT -j DNAT --to-destination 10.0.0.1:$PORT
         sudo iptables -t nat -A POSTROUTING -j MASQUERADE
     fi
 
-    sudo iptables -A INPUT --proto icmp -j DROP
+    sudo iptables -t raw -A PREROUTING --proto icmp -j DROP
 
 else
-    sudo ip addr add 10.1.1.1/16 dev sit1
+    sudo ip addr add 10.0.0.1/16 dev sit1
 fi
